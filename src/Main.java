@@ -1,5 +1,7 @@
 import com.personalmanagement.akademikkadro.*;
 import com.personalmanagement.arac.*;
+import com.personalmanagement.factory.arac.*;
+import com.personalmanagement.factory.calisan.*;
 
 import java.util.List;
 import java.util.Random;
@@ -9,10 +11,10 @@ public class Main {
     public static void main(String[] args) {
         final int ASGARI = 15;
 
-        Arac bisiklet = new Bisiklet("Socci", "AR10", 2, 0);
-        Arac scoother = new Scoother("Honda", "PCX", 2, 150);
-        Arac motorsiklet = new Motorsiklet("Yamaha", "R25", 2, 250);
-        Arac otomobil = new Otomobil("Toyota", "Carolla", 4, 900);
+        Arac bisiklet = getBisiklet(BisikletFactory.of());
+        Arac scoother = getScoother(ScootherFactory.of());
+        Arac motorsiklet = getMotorsiklet(MotorsikletFactory.of());
+        Arac otomobil = getOtomobil(OtomobilFactory.of());
 
         List<Arac> araclar = List.of(bisiklet, scoother, motorsiklet, otomobil);
 
@@ -31,6 +33,22 @@ public class Main {
 
     }
 
+    private static Arac getOtomobil(AracFactory aracFactory) {
+        return aracFactory.createArac("Toyota", "Carolla", 4, 900);
+    }
+
+    private static Arac getMotorsiklet(AracFactory aracFactory) {
+        return aracFactory.createArac("Yamaha", "R25", 2, 250);
+    }
+
+    private static Arac getScoother(AracFactory factory) {
+        return factory.createArac("Honda", "PCX", 2, 150);
+    }
+
+    private static Arac getBisiklet(AracFactory factory) {
+        return factory.createArac("Socci", "AR10", 2, 0);
+    }
+
     private static void showCalisanlar(List<Calisan> calisanlar) {
         System.out.println("-----------------Tum Calisanlar Goster------------------");
         for (Calisan calisan : calisanlar)
@@ -44,31 +62,36 @@ public class Main {
     }
 
     private static Calisan getProf(Calisan calisan, List<Arac> araclar) {
-        Calisan prof = new Profesor("Zeynep", "Durak", 58, true, calisan.maas(), getRandomArac(araclar));
+        ProfesorFactory profesorFactory = ProfesorFactory.of();
+        Calisan prof = profesorFactory.createCalisan("Zeynep", "Durak", 58, true, calisan.maas(), getRandomArac(araclar));
         checkAkademisyen(prof);
         return prof;
     }
 
     private static Calisan getProf2(Calisan calisan, List<Arac> araclar) {
-        Calisan prof = new Profesor("Hülya", "Cengiz", 51, false, calisan.maas(), getRandomArac(araclar));
+        ProfesorFactory profesorFactory = ProfesorFactory.of();
+        Calisan prof = profesorFactory.createCalisan("Hülya", "Cengiz", 51, false, calisan.maas(), getRandomArac(araclar));
         checkAkademisyen(prof);
         return prof;
     }
 
     private static Calisan getDocent(Calisan calisan, List<Arac> araclar) {
-        Calisan docent = new Docent("Elif", "Yaman", 48, false, calisan.maas(), getRandomArac(araclar));
+        DocentFactory factory = DocentFactory.of();
+        Calisan docent = factory.createCalisan("Elif", "Yaman", 48, false, calisan.maas(), getRandomArac(araclar));
         checkAkademisyen(docent);
         return docent;
     }
 
     private static Calisan getOgretimUyesi(Calisan calisan, List<Arac> araclar) {
-        Calisan ogretimUyesi = new OgretimUyesi("Mehmet", "Er", 38, false, calisan.maas(), getRandomArac(araclar));
+        AkademikKadroFactory factory = OgretimUyesiFactory.of();
+        Calisan ogretimUyesi = factory.createCalisan("Mehmet", "Er", 38, false, calisan.maas(), getRandomArac(araclar));
         checkAkademisyen(ogretimUyesi);
         return ogretimUyesi;
     }
 
     private static Calisan getArastirmaGorevlisi(int ASGARI, List<Arac> araclar) {
-        Calisan arastirmaGorevlisi = new ArastirmaGorevlisi("Ali", "Can", 28, true, ASGARI, getRandomArac(araclar));
+        AkademikKadroFactory arastirmaGorevlisiFactory = ArastirmaGorevlisiFactory.of();
+        Calisan arastirmaGorevlisi = arastirmaGorevlisiFactory.createCalisan("Ali", "Can", 28, true, ASGARI, getRandomArac(araclar));
         checkAkademisyen(arastirmaGorevlisi);
         return arastirmaGorevlisi;
     }
